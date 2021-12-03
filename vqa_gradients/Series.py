@@ -72,7 +72,7 @@ class Series():
   
 
     
-def psr_jac(objective, param, R):
+def psr_jac(param, objective, R):
     jac_vec = np.empty((len(param),))
     for i in range(len(param)):
         objective_i = np.vectorize( lambda x: objective([var if var!=param[i] else x for var in param]) )
@@ -80,3 +80,13 @@ def psr_jac(objective, param, R):
         y = objective_i(x)
         jac_vec[i] = Series(x,y).gradient(param[i])
     return(jac_vec)
+
+
+def psr_optimise(func, param):
+    def objective2(param, *args):
+        return(func(param))
+    return(
+        minimize(objective2,
+                 param,
+                 jac=psr_jac,
+                 args=(func, 10)))
