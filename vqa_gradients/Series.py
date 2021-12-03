@@ -82,9 +82,14 @@ def psr_jac(param, objective, R):
     return(jac_vec)
 
 
-def psr_optimise(func, param, **kwarg):
+def psr_optimise(func, param, **kwargs):
+    for kw in kwargs:
+        if kw=="R":
+            R = kwargs[kw]
+
     def objective2(param, *args):
         return(func(param))
+
     return(
         minimize(objective2,
                  param,
