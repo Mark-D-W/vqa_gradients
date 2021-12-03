@@ -3,8 +3,8 @@
 from setuptools import setup, find_packages
 
 VERSION = '0.0.1' 
-DESCRIPTION = 'My first Python package'
-LONG_DESCRIPTION = 'My first Python package with a slightly longer description'
+DESCRIPTION = 'Gradients of variational quantum circuits.'
+#LONG_DESCRIPTION = ''
 
 # Setting up
 setup(
@@ -14,16 +14,11 @@ setup(
         author="Mark Walker",
         author_email="mark.damon.walker@gmail.com",
         description=DESCRIPTION,
-        long_description=LONG_DESCRIPTION,
+        #long_description=LONG_DESCRIPTION,
         packages=find_packages(),
         install_requires=["numpy","scipy","matplotlib"],         
-        keywords=['python', 'first package'],
+        keywords=['python'],
         classifiers= [
-            "Development Status :: 3 - Alpha",
-            "Intended Audience :: Education",
-            "Programming Language :: Python :: 2",
             "Programming Language :: Python :: 3",
-            "Operating System :: MacOS :: MacOS X",
-            "Operating System :: Microsoft :: Windows",
         ]
 )
