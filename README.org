@@ -1,0 +1,13 @@
+#+TITLE: vqa_gradients
+#+AUTHOR: Mark Walker
+
+* Installation
+Install this package by running:
+#+begin_src sh
+  python3 setup.py
+#+end_src
+
+Alternativly you can install the package with developer options (so you can make and run changes to the source code) with:
+#+begin_src  sh
+  python3 setup.py develop
+#+end_src
