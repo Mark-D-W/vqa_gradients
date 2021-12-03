@@ -82,7 +82,7 @@ def psr_jac(param, objective, R):
     return(jac_vec)
 
 
-def psr_optimise(func, param):
+def psr_optimise(func, param, **kwarg):
     def objective2(param, *args):
         return(func(param))
     return(
