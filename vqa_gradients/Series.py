@@ -79,6 +79,7 @@ def psr_jac(param, objective, R):
         x = np.linspace(1,10,num=2*R+1)
         y = objective_i(x)
         jac_vec[i] = Series(x,y).gradient(param[i])
+        Series(x,y).plot(function=objective_i)
     return(jac_vec)
 
 
@@ -90,14 +91,30 @@ def psr_optimise(func, param, **kwargs):
     def objective2(param, *args):
         return(func(param))
 
+    psr_gradient = psr_jac(param,objective2,R)
+    fd_gradient = [partial_derivative(objective2,param,i) for i in range(len(param))]
+    print(f"""
+The psr gradient is: {psr_gradient}
+The fd gradient is: {fd_gradient}
+""")
+
     return(
         minimize(objective2,
                  param,
+                 method="BFGS",
                  jac=psr_jac,
                  args=(func, 10)))
 
 
 
 def find_R_from_qualities(qualities):
-    R = len(np.unique(qualities))
+    R = len(np.unique(np.diff(qualities)))
+    print(f"R = {R}")
     return(R)
+
+
+
+
+def partial_derivative(func, param, i):
+    wraps = lambda x: func([var if var!=param[i] else x for var in param])
+    return derivative(wraps, param[i], dx=1e-6)
