@@ -90,3 +90,9 @@ def psr_optimise(func, param, **kwarg):
                  param,
                  jac=psr_jac,
                  args=(func, 10)))
+
+
+
+def find_R_from_qualities(qualities):
+    R = len(np.unique(qualities))
+    return(R)
