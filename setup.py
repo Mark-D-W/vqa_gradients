@@ -8,17 +8,31 @@ DESCRIPTION = 'Gradients of variational quantum circuits.'
 
 # Setting up
 setup(
-       # the name must match the folder name 'verysimplemodule'
-        name="vqa_gradients", 
-        version=VERSION,
-        author="Mark Walker",
-        author_email="mark.damon.walker@gmail.com",
-        description=DESCRIPTION,
-        #long_description=LONG_DESCRIPTION,
-        packages=find_packages(),
-        install_requires=["numpy","scipy","matplotlib"],         
-        keywords=['python'],
-        classifiers= [
-            "Programming Language :: Python :: 3",
-        ]
+    name="vqa_gradients", 
+    version=VERSION,
+    author="Mark Walker",
+    author_email="mark.damon.walker@gmail.com",
+    description=DESCRIPTION,
+    #long_description=LONG_DESCRIPTION,
+    packages=find_packages(),
+    install_requires=["numpy","scipy","matplotlib"],         
+    keywords=['python'],
+    classifiers= [
+        "Programming Language :: Python :: 3",
+    ]
 )
+
+
+
+
+# Build the f2py fortran extension
+# --------------------------------
+from numpy.distutils.core import Extension
+from numpy.distutils.core import setup
+
+flib = Extension(name = 'functions.flib',
+                 #extra_compile_args = ['-O3'],
+                 sources = ['src_fortran/functions.f90']
+                 )
+
+setup(ext_modules = [flib])

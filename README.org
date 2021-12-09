@@ -4,7 +4,7 @@
 * Installation
 Install this package by running:
 #+begin_src sh
-  python3 setup.py
+  python3 setup.py install
 #+end_src
 
 Alternativly you can install the package with developer options (so you can make and run changes to the source code) with:

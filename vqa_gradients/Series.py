@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.misc import derivative
 from scipy.optimize import minimize
 
-from .ff import functions
+from functions.flib import functions
 
 class Series():
     def __init__(self, x, y):
