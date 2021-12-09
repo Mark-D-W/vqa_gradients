@@ -4,39 +4,39 @@ import matplotlib.pyplot as plt
 from scipy.misc import derivative
 from scipy.optimize import minimize
 
+from .ff import functions
 
 class Series():
     def __init__(self, x, y):
         if np.mod(len(x), 2)!=1 or np.mod(len(y), 2)!=1 or len(x)!=len(y):
             raise Exception("x and y vectors must have length 2*R+1 where R is the number of unique eiginvalues of the function being reconstructed.")
-        self.x = x
-        self.y = y
+        self.x = np.array(x)
+        self.y = np.array(y)
         self.R = int( (len(x) - 1)/2 )
         self.__create()
 
 
     def gradient(self, x):
-       return( derivative(self.series, x, dx=1e-6) )
+        return( derivative(self.series, x, dx=1e-6) )
 
 
     def plot(self, function=None):
-       range_x = np.linspace(min(self.x), max(self.x), num=100)
-       series_y = np.vectorize(self.series)(range_x)
-       plt.scatter(self.x, self.y, color="red", zorder=3, label="Sampled points")
-       plt.plot(range_x, series_y, linestyle="dashed", linewidth=3, color="blue", zorder=2, label="Reconstructed function")
-       if function!=None:
-          function_y = np.vectorize(function)(range_x)
-          plt.plot(range_x,function_y, linewidth=2, color="black", zorder=1, label="Original function")
-       plt.legend()
-       plt.show()
-       plt.close()
+        range_x = 2*np.linspace(min(self.x), max(self.x), num=1000)
+        series_y = np.vectorize(self.series)(range_x)
+        plt.scatter(self.x, self.y, color="red", zorder=3, label="Sampled points")
+        plt.plot(range_x, series_y, linestyle="dashed", linewidth=3, color="blue", zorder=2, label="Reconstructed function")
+        if function!=None:
+           function_y = np.vectorize(function)(range_x)
+           plt.plot(range_x,function_y, linewidth=2, color="black", zorder=1, label="Original function")
+           plt.legend()
+           plt.show()
+           plt.close()
 
 
     def __create(self):
         fourier_term_mat = self.__generate_fourier_term_matrix()
         coef = np.linalg.solve(fourier_term_mat, self.y)
         R = self.R
-        Omega = np.arange(1,R+1)
 
         def series(x):
             res = np.zeros((2*R+1,))
@@ -44,9 +44,9 @@ class Series():
                 if i == 0:
                     res[i] = coef[0]
                 elif np.mod(i, 2) == 0:
-                    res[i] = coef[i] * np.sin(Omega[int(i/2)-1] * x)
+                    res[i] = coef[i] * np.sin(i/2 * x)
                 elif np.mod(i, 2) == 1:
-                    res[i] = coef[i] * np.cos(Omega[int(((i-1)/2)-1)] * x)
+                    res[i] = coef[i] * np.cos((i+1)/2 * x)
             return(np.sum(res))
 
         self.series = series
@@ -55,66 +55,17 @@ class Series():
     def __generate_fourier_term_matrix(self):
         x = self.x
         R = self.R
-        Omega = np.arange(1,R+1)
+        seriesf = functions.generate_fourier_term_matrix(x,R)
         series = np.zeros((2*R+1, 2*R+1))
         for i in range(2*R+1):
             for j in range(2*R+1):
                 if i == 0:
                     series[j,i] = 1
                 elif np.mod(i, 2) == 0:
-                    series[j,i] = np.sin(Omega[int(i/2)-1] * x[j])
+                    series[j,i] = np.sin(i/2 * x[j])
                 elif np.mod(i, 2) == 1:
-                    series[j,i] = np.cos(Omega[int((i-1)/2-1)] * x[j])
+                    series[j,i] = np.cos((i+1)/2 * x[j])
+        print(series)
+        print(seriesf.T)
         return(series)
 
-
-    
-  
-
-    
-def psr_jac(param, objective, R):
-    jac_vec = np.empty((len(param),))
-    for i in range(len(param)):
-        objective_i = np.vectorize( lambda x: objective([var if var!=param[i] else x for var in param]) )
-        x = np.linspace(1,10,num=2*R+1)
-        y = objective_i(x)
-        jac_vec[i] = Series(x,y).gradient(param[i])
-        Series(x,y).plot(function=objective_i)
-    return(jac_vec)
-
-
-def psr_optimise(func, param, **kwargs):
-    for kw in kwargs:
-        if kw=="R":
-            R = kwargs[kw]
-
-    def objective2(param, *args):
-        return(func(param))
-
-    psr_gradient = psr_jac(param,objective2,R)
-    fd_gradient = [partial_derivative(objective2,param,i) for i in range(len(param))]
-    print(f"""
-The psr gradient is: {psr_gradient}
-The fd gradient is: {fd_gradient}
-""")
-
-    return(
-        minimize(objective2,
-                 param,
-                 method="BFGS",
-                 jac=psr_jac,
-                 args=(func, 10)))
-
-
-
-def find_R_from_qualities(qualities):
-    R = len(np.unique(np.diff(qualities)))
-    print(f"R = {R}")
-    return(R)
-
-
-
-
-def partial_derivative(func, param, i):
-    wraps = lambda x: func([var if var!=param[i] else x for var in param])
-    return derivative(wraps, param[i], dx=1e-6)
