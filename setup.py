@@ -1,6 +1,7 @@
 # Set up with python3 setup.py install
 
-COMPILE = True
+# Choose if to compile .py files with cython
+COMPILE = False
 
 from setuptools import setup, find_packages
 

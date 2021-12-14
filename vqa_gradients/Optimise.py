@@ -27,7 +27,7 @@ class Optimise():
 
         psr_gradient = self.__jac(param)
         fd_gradient = [self.__partial_derivative(self.objective,param,i) for i,v in enumerate(param)]
-        print(f"The psr gradient is: {psr_gradient} at {param}\nThe fd gradient is: {fd_gradient} at {param}\n")
+        #print(f"The psr gradient is: {psr_gradient} at {param}\nThe fd gradient is: {fd_gradient} at {param}\n")
 
         return(
             minimize(self.objective,
@@ -80,7 +80,7 @@ class Optimise():
             else:
                 #jac_vec[i] = derivative(objective_i, param[i], dx=1e-6)
                 jac_vec[i] = s.gradient(param[i])
-            s.plot(function=objective_i)
+            #s.plot(function=objective_i)
         return(jac_vec)
 
 
