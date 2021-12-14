@@ -67,7 +67,8 @@ class Optimise():
                 R = R_W  # Walk operator
             objective_i = np.vectorize( lambda x: objective([val if idx!=i else x for idx,val in enumerate(param)]) )
 
-            x = np.array([(2*np.pi*i)/(2*R+1) for i in range(-R,R+1)])
+            #x = np.array([(2*np.pi*i)/(2*R+1) for i in range(-R,R+1)])
+            x = np.array([(2*np.pi*i)/(2*R+1) for i in range(0,2*R+1)])
             y = objective_i(x)
             s = Series(x,y)
             if i%2==0:
