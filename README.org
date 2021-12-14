@@ -11,3 +11,8 @@ Alternativly you can install the package with developer options (so you can make
 #+begin_src  sh
   python3 setup.py develop
 #+end_src
+
+If you want to compile the package using cython run:
+#+begin_src sh
+  python3 setup.py install --compile
+#+end_src

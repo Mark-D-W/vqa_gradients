@@ -1,9 +1,26 @@
-# Set up with python3 setup.py install
-
-# Choose if to compile .py files with cython
-COMPILE = False
+# Set up with:
+# python3 setup.py install
+# or
+# python3 setup.py install --compile
+# to compile python code using cython
+import sys
 
 from setuptools import setup, find_packages
+
+from distutils.core import setup
+from distutils.extension import Extension
+from Cython.Distutils import build_ext
+
+
+
+# Choose if to compile .py files with cython
+if "--compile" in sys.argv:
+    COMPILE = True
+    sys.argv.remove("--compile")
+else:
+    COMPILE = False
+
+
 
 VERSION = '0.0.1' 
 DESCRIPTION = 'Gradients of variational quantum circuits.'
@@ -29,11 +46,6 @@ setup(
 
 # Build the cython extension
 # --------------------------
-from distutils.core import setup
-from distutils.extension import Extension
-from Cython.Distutils import build_ext
-
-
 ext_modules=[
     Extension("vqa_gradients.Series", ["vqa_gradients/Series.py"]),
     Extension("vqa_gradients.Optimize", ["vqa_gradients/Optimise.py"]),
