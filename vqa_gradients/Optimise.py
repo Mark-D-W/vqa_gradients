@@ -1,3 +1,7 @@
+# cython: annotation_typing = True
+# cython: language_level = 3
+import cython
+
 from .Series import *
 
 import numpy as np

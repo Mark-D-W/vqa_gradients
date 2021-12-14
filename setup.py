@@ -1,4 +1,6 @@
-# Set up with python setup.py sdist bdist_wheel
+# Set up with python3 setup.py install
+
+COMPILE = True
 
 from setuptools import setup, find_packages
 
@@ -21,3 +23,26 @@ setup(
         "Programming Language :: Python :: 3",
     ]
 )
+
+
+
+# Build the cython extension
+# --------------------------
+from distutils.core import setup
+from distutils.extension import Extension
+from Cython.Distutils import build_ext
+
+
+ext_modules=[
+    Extension("vqa_gradients.Series", ["vqa_gradients/Series.py"]),
+    Extension("vqa_gradients.Optimize", ["vqa_gradients/Optimise.py"]),
+    Extension("vqa_gradients.misc_functions", ["vqa_gradients/misc_functions.py"]),
+    ]
+
+if COMPILE:
+    setup(
+        name="cy_ext",
+        cmdclass = {'build_ext': build_ext},
+        script_args = ['build_ext', '--inplace'],
+        ext_modules=ext_modules
+    )
