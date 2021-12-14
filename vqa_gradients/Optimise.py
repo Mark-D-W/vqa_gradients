@@ -75,11 +75,7 @@ class Optimise():
             x = np.array([(2*np.pi*i)/(2*R+1) for i in range(0,2*R+1)])
             y = objective_i(x)
             s = Series(x,y)
-            if i%2==0:
-                jac_vec[i] = s.gradient(param[i])
-            else:
-                #jac_vec[i] = derivative(objective_i, param[i], dx=1e-6)
-                jac_vec[i] = s.gradient(param[i])
+            jac_vec[i] = s.gradient(param[i])
             #s.plot(function=objective_i)
         return(jac_vec)
 
