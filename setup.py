@@ -21,18 +21,3 @@ setup(
         "Programming Language :: Python :: 3",
     ]
 )
-
-
-
-
-# Build the f2py fortran extension
-# --------------------------------
-from numpy.distutils.core import Extension
-from numpy.distutils.core import setup
-
-flib = Extension(name = 'functions.flib',
-                 #extra_compile_args = ['-O3'],
-                 sources = ['src_fortran/functions.f90']
-                 )
-
-setup(ext_modules = [flib])
