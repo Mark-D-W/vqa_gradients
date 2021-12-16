@@ -1,15 +1,18 @@
 # cython: annotation_typing = True
 # cython: language_level = 3
+# cython: boundscheck=True
 import cython
 
 cdef class Series:
     cdef public double[:] x
-    cdef public double[:] y
+    cdef public complex[:] y
     cdef public int R
+    def public series
 
-    @cython.locals(x=cython.double[:],
-                   R=cython.int,
-                   series=cython.double[:,:],
-                   i=cython.int,
-                   j=cython.int)
-    cpdef cython.double[:,:] __generate_fourier_term_matrix(self)
+    @cython.locals(x=double[:],
+                   R=int,
+                   series=double[:,:],
+                   i=int,
+                   j=int)
+    cpdef double[:,:] __generate_fourier_term_matrix(self)
+
