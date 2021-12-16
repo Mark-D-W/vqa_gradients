@@ -5,9 +5,9 @@ import cython
 
 cdef class Series:
     cdef public double[:] x
-    cdef public complex[:] y
+    cdef public double[:] y
     cdef public int R
-    def public series
+    cdef public series
 
     @cython.locals(x=double[:],
                    R=int,

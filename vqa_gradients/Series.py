@@ -10,7 +10,7 @@ class Series():
         if np.mod(len(x), 2)!=1 or np.mod(len(y), 2)!=1 or len(x)!=len(y):
             raise Exception("x and y vectors must have length 2*R+1 where R is the number of unique eiginvalues of the function being reconstructed.")
         self.x = np.array(x)
-        self.y = np.array(y)
+        self.y = np.array(y, dtype=np.float64)
         self.R = int( (len(x) - 1)/2 )
         self.__create()
 
