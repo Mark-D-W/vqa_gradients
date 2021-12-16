@@ -1,7 +1,3 @@
-# cython: annotation_typing = True
-# cython: language_level = 3
-import cython
-
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -10,20 +6,20 @@ from scipy.optimize import minimize
 
 
 class Series():
-    def __init__(self, x:np.ndarray, y:np.ndarray) -> None:
+    def __init__(self, x, y):
         if np.mod(len(x), 2)!=1 or np.mod(len(y), 2)!=1 or len(x)!=len(y):
             raise Exception("x and y vectors must have length 2*R+1 where R is the number of unique eiginvalues of the function being reconstructed.")
-        self.x:np.ndarray = np.array(x)
-        self.y:np.ndarray = np.array(y)
-        self.R:int = int( (len(x) - 1)/2 )
+        self.x = np.array(x)
+        self.y = np.array(y)
+        self.R = int( (len(x) - 1)/2 )
         self.__create()
 
 
-    def gradient(self, x:float) -> float:
+    def gradient(self, x):
         return( derivative(self.series, x, dx=1e-6) )
 
 
-    def plot(self, function=None) -> None:
+    def plot(self, function=None):
         range_x = 2*np.linspace(min(self.x), max(self.x), num=1000)
         series_y = np.vectorize(self.series)(range_x)
         plt.scatter(self.x, self.y, color="red", zorder=3, label="Sampled points")
@@ -36,14 +32,13 @@ class Series():
            plt.close()
 
 
-    def __create(self) -> None:
+    def __create(self):
         fourier_term_mat = self.__generate_fourier_term_matrix()
         coef = np.linalg.solve(fourier_term_mat, self.y)
         R = self.R
 
         def series(x):
             res = np.zeros((2*R+1,))
-            i:int
             for i in range(2*R+1):
                 if i == 0:
                     res[i] = coef[0]
@@ -56,11 +51,10 @@ class Series():
         self.series = series
 
 
-    def __generate_fourier_term_matrix(self) -> np.ndarray:
+    def __generate_fourier_term_matrix(self):
         x = self.x
         R = self.R
-        series:np.ndarray = np.zeros((2*R+1, 2*R+1))
-        i:int; j:int
+        series = np.zeros((2*R+1, 2*R+1))
         for i in range(2*R+1):
             for j in range(2*R+1):
                 if i == 0:
