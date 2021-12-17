@@ -17,7 +17,7 @@ class Optimise():
         self.R_W=None
 
         
-    def optimiser(self, func, param, **kwargs):
+    def __call__(self, func, param, **kwargs):
         self.objective = func
         for kw in kwargs:
             if kw=="R_Q":
