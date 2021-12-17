@@ -1,3 +1,3 @@
 from .Series import *
-from .Optimise import *
+from .Optimiser import *
 from .misc_functions import *

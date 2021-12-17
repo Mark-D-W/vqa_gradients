@@ -18,7 +18,7 @@ Psi = np.zeros((2**n_qubits,1)); Psi[0] = 1
 G = np.diag(np.random.choice([1,2,3,4,5,6,7,8,9,10], 2**n_qubits))
 W = vqa_gradients.complete_graph(2**n_qubits)/2**n_qubits
 #W = np.diag(np.random.choice([1,2,3,4,5,6,7,8,9,10], 2**n_qubits))
-R = vqa_gradients.Optimise().find_R_from_qualities(np.linalg.eigvals(W))
+R = vqa_gradients.Optimiser().find_R_from_qualities(np.linalg.eigvals(W))
 rnd1 = unitary_group.rvs(2**n_qubits)
 rnd2 = unitary_group.rvs(2**n_qubits)
 
