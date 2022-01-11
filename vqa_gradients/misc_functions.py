@@ -7,3 +7,20 @@ import numpy as np
 
 def complete_graph(n):
     return np.ones((n,n)) - np.diag(np.ones(n))
+
+
+def __num_unique_positive_differences(array, epsilon=1e-6):
+    diffs = [0] #There is always 0 difference
+    array.sort()
+    for idx_i,val_i in enumerate(array):
+        for idx_j,val_j in enumerate(array[idx_i:]):
+            diff = np.real(val_j - val_i)
+            if diff>epsilon:
+                diffs.append(diff)
+    return(len(np.unique(diffs)))
+
+
+def find_R_from_qualities(qualities):
+    R_Q = __num_unique_positive_differences(qualities)
+    return(R_Q)
+
