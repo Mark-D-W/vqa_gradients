@@ -11,10 +11,10 @@ from scipy.optimize import minimize
 
 
 class Optimiser():
-    def __init__(self):
+    def __init__(self, R_Q=None, R_W=None):
         self.objective=None
-        self.R_Q=None
-        self.R_W=None
+        self.R_Q=R_Q
+        self.R_W=R_W
 
         
     def __call__(self, func, param, **kwargs):
@@ -36,26 +36,10 @@ class Optimiser():
                      jac=self.__jac))
 
 
-    def find_R_from_qualities(self, qualities):
-        R_Q = self.__num_unique_positive_differences(qualities)
-        return(R_Q)
-
 
     def __partial_derivative(self, func, param, i):
         wraps = lambda x: func([val if idx!=i else x for idx,val in enumerate(param)])
         return derivative(wraps, param[i], dx=1e-6)
-
-
-
-    def __num_unique_positive_differences(self, array, epsilon=1e-6):
-        diffs = [0] #There is always 0 difference
-        array.sort()
-        for idx_i,val_i in enumerate(array):
-            for idx_j,val_j in enumerate(array[idx_i:]):
-                diff = np.real(val_j - val_i)
-                if diff>epsilon:
-                    diffs.append(diff)
-        return(len(np.unique(diffs)))
 
 
     def __jac(self, param):
