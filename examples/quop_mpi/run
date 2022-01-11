@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ! -d out ]; then
+    mkdir out
+fi
+
+
+mpirun -N 2 python3 src/run_standard.py
+mpirun -N 2 python3 src/run_vqa_gradients.py 
+
+python3 src/plots.py
