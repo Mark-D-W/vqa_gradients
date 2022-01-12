@@ -20,7 +20,7 @@ alg.set_log("out/run_log", "vqa", action="a")
 
 optimiser = vqa_gradients.Optimiser(R_W=2,
                                     R_Q=vqa_gradients.find_R_from_qualities(qualities))
-alg.set_custom_optimiser(optimiser, optimiser_log=['fun','nfev','success'])
+alg.set_optimiser(optimiser, optimiser_log=['fun','nfev','success'])
 
 alg.benchmark(
     range(1, 6), 3, param_persist=True, filename="out/benchmark_vqa", save_action="w"
