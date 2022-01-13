@@ -24,11 +24,6 @@ class Optimiser():
                 self.R_Q = kwargs[kw]
             elif kw=="R_W":
                 self.R_W = kwargs[kw]
-
-        #psr_gradient = self.__jac(param)
-        #fd_gradient = [self.__partial_derivative(self.objective,param,i) for i,v in enumerate(param)]
-        #print(f"The psr gradient is: {psr_gradient} at {param}\nThe fd gradient is: {fd_gradient} at {param}\n")
-
         return(
             minimize(self.objective,
                      param,
@@ -36,10 +31,6 @@ class Optimiser():
                      jac=self.__jac))
 
 
-
-    def __partial_derivative(self, func, param, i):
-        wraps = lambda x: func([val if idx!=i else x for idx,val in enumerate(param)])
-        return derivative(wraps, param[i], dx=1e-6)
 
 
     def __jac(self, param):

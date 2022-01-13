@@ -5,6 +5,13 @@ import cython
 import numpy as np
 
 
+
+def partial_derivative(func, param, i):
+    wraps = lambda x: func([val if idx!=i else x for idx,val in enumerate(param)])
+    return derivative(wraps, param[i], dx=1e-6)
+
+
+
 def complete_graph(n):
     return np.ones((n,n)) - np.diag(np.ones(n))
 
