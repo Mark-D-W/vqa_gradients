@@ -1,13 +1,10 @@
 import numpy as np
 from scipy.optimize import minimize
-from scipy.misc import derivative
-
-import matplotlib.pyplot as plt
+import numdifftools as nd
 
 
 class QAD():
-    def __init__(self, E=None, tol=1e-6, num=10):
-        self.E = E
+    def __init__(self, tol=1e-6, num=10):
         self.tol = tol
         self.num = num
     
@@ -31,21 +28,14 @@ class QAD():
         return {"E(x)":E(params), "x":params, "termination":break_reason, "itterations":num_models}
 
 
-
-
-    def set_derivatives(self, jacobian, hessian):
-        self.jacobian = jacobian
-        self.hessian = hessian
-        
-
-
-
-
     def get_model_data(self, params):
+        jacobian = nd.Jacobian(self.E)
+        hessian = nd.Hessian(self.E)
+
         self.E_A = self.E(params)
-        self.E_B = self.jacobian(params)
-        self.E_C = np.diag(self.hessian(params)) + self.E_A / 2
-        self.E_D = np.triu(self.hessian(params), 1)
+        self.E_B = jacobian(params)
+        self.E_C = np.diag(hessian(params)) + self.E_A / 2
+        self.E_D = np.triu(hessian(params), 1)
 
 
 
@@ -109,43 +99,13 @@ class QAD():
 ####                       TESTING                             ####
 ###################################################################
 
-def partial_derivative(func, param, i, dx=1e-6, n=1):
-    wraps = lambda x: func([val if idx!=i else x for idx,val in enumerate(param)])
-    return derivative(wraps, param[i], dx=dx, n=n)
-
-
-def jacobian(func, param):
-    return np.array([partial_derivative(func, param, i)
-                     for i in range(len(param))])
-
-
 def QAD_test():
-    func = lambda x: np.sin(x[0]) + np.cos(x[1])
-    func_jac = lambda x: jacobian(func, x)
-    func_hess = lambda x: np.array([[-np.sin(x[0]), 0],[0, -np.cos(x[1])]])
-    qad = QAD(DEBUG=True)
-    qad.set_derivatives(func_jac, func_hess)
-    starting_param = np.random.random(2)
-    res = qad(func, starting_param)
-    print(f"res = {res}")
-
-
-def testing():
-    func = lambda x: np.sin(x[0]) + np.cos(x[1])
-    func_jac = lambda x: jacobian(func, x)
-    func_hess = lambda x: np.array([[-np.sin(x[0]), 0],[0, -np.cos(x[1])]])
-    qad = QAD(E=func, DEBUG=True)
-    qad.set_derivatives(func_jac, func_hess)
-
-    parameters = np.random.random(2)
-    delta = np.mod( np.random.random(2), np.pi/8 )
-    E_original = func(parameters+delta)
-    qad.get_model_data(parameters)
-    res = qad.model(delta)
-    print(f"Original={E_original}, Model={res}")
-
-
+    func = lambda x: np.sin(x[0]) + x[2]**2 - 2*np.sin(x[1])
+    param = np.random.random(3)
+    qad = QAD()
+    res = qad(func, param)
+    print(f"res={res}")
+    print(f"actual minima={minimize(func, param)['fun']}")
 
 
 QAD_test()
-#testing()
