@@ -7,9 +7,14 @@ from scipy.misc import derivative
 
 
 
-def partial_derivative(func, param, i):
+def partial_derivative(func, param, i, dx=1e-6, n=1):
     wraps = lambda x: func([val if idx!=i else x for idx,val in enumerate(param)])
-    return derivative(wraps, param[i], dx=1e-6)
+    return derivative(wraps, param[i], dx=dx, n=n)
+
+
+def jacobian(func, param):
+    return np.array([partial_derivative(func, param, i)
+                     for i in range(len(param))])
 
 
 
