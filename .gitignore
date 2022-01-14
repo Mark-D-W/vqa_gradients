@@ -2,3 +2,4 @@
 *.egg-info
 build/
 docs/
+__pycache__/
