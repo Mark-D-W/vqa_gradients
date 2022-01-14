@@ -11,6 +11,7 @@ class QAD():
         self.optimiser = optimiser
         self.optimiser_args = optimiser_args
     
+
     def __call__(self, E, params):
         self.E = E
         num_models = 0
@@ -39,7 +40,6 @@ class QAD():
         self.E_B = jacobian(params)
         self.E_C = np.diag(hessian(params)) + self.E_A / 2
         self.E_D = np.triu(hessian(params), 1)
-
 
 
     def model(self, params):
