@@ -1,12 +1,15 @@
 import numpy as np
 from scipy.optimize import minimize
+from scipy.optimize import basinhopping
 import numdifftools as nd
 
 
 class QAD():
-    def __init__(self, tol=1e-6, num=10):
+    def __init__(self, tol=1e-6, num=10, optimiser=minimize, optimiser_args={}):
         self.tol = tol
         self.num = num
+        self.optimiser = optimiser
+        self.optimiser_args = optimiser_args
     
     def __call__(self, E, params):
         self.E = E
@@ -15,7 +18,7 @@ class QAD():
         break_reason = ""
         while True:
             self.get_model_data(params)
-            params = params + minimize(self.model, np.zeros_like(params))["x"]
+            params = params + self.optimiser(self.model, np.zeros_like(params), **self.optimiser_args)["x"]
             num_models += 1
             if np.abs(prev_min-self.E(params)) < self.tol:
                 break_reason = "tol"
@@ -92,20 +95,3 @@ class QAD():
             )
 
         return E_approx
-
-
-
-###################################################################
-####                       TESTING                             ####
-###################################################################
-
-def QAD_test():
-    func = lambda x: np.sin(x[0]) + x[2]**2 - 2*np.sin(x[1])
-    param = np.random.random(3)
-    qad = QAD()
-    res = qad(func, param)
-    print(f"res={res}")
-    print(f"actual minima={minimize(func, param)['fun']}")
-
-
-QAD_test()
