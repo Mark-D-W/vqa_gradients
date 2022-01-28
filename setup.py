@@ -35,7 +35,7 @@ setup(
     description=DESCRIPTION,
     #long_description=LONG_DESCRIPTION,
     packages=find_packages(),
-    install_requires=["cython", "numpy","scipy","matplotlib"],
+    install_requires=["cython","numpy","scipy","matplotlib","numdifftools"],
     keywords=['python'],
     classifiers= [
         "Programming Language :: Python :: 3",
