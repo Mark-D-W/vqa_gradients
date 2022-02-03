@@ -18,6 +18,7 @@ class QAD():
         params = par
         prev_min = E(params)
         min_found = prev_min
+        min_params = params
         break_reason = ""
         while True:
             self.get_model_data(params)
@@ -26,7 +27,7 @@ class QAD():
             optim_res = self.optimiser(self.model, np.zeros_like(params), **self.optimiser_args)
             params = params + optim_res["x"]
             minima = self.E(params)
-            if minima < min_found:
+            if minima <= min_found:
                 min_found = minima
                 min_params = params
                 min_optim = optim_res
