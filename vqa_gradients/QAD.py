@@ -5,11 +5,12 @@ import numdifftools as nd
 
 
 class QAD():
-    def __init__(self, tol=1e-6, num=20, optimiser=basinhopping, optimiser_args={}):
+    def __init__(self, tol=1e-6, num=20, optimiser=basinhopping, optimiser_args={}, logfile="qad_log.txt"):
         self.tol = tol
         self.num = num
         self.optimiser = optimiser
         self.optimiser_args = optimiser_args
+        self.logfile = logfile
 
 
     def __call__(self, E, par):
@@ -33,7 +34,7 @@ class QAD():
                 min_optim = optim_res
 
             tol = np.abs(prev_min-self.E(params))
-            print(f"QAD: Iteration={num_models}, tolerence={tol}, min_found={min_found}")
+            self.__log(f"Iteration={num_models}, tolerence={tol}, min_found={min_found}")
             if tol < self.tol:
                 break_reason = "tol"
                 break
@@ -47,8 +48,15 @@ class QAD():
         optim_res["fun"] = self.E(params)
         if self.optimiser == basinhopping:
             optim_res.success = optim_res.lowest_optimization_result.success
-        print(f"QAD: Final optimisation results: min={optim_res.fun}")
+        self.__log(f"Final optimisation results: min={optim_res.fun}")
         return optim_res
+
+
+
+    def __log(self, msg):
+        with open(self.logfile, "a") as infile:
+            infile.write(f"{msg}\n")
+
 
 
     def get_model_data(self, params):
