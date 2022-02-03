@@ -10,7 +10,7 @@ class QAD():
         self.num = num
         self.optimiser = optimiser
         self.optimiser_args = optimiser_args
-    
+
 
     def __call__(self, E, params):
         self.E = E
@@ -19,7 +19,8 @@ class QAD():
         break_reason = ""
         while True:
             self.get_model_data(params)
-            params = params + self.optimiser(self.model, np.zeros_like(params), **self.optimiser_args)["x"]
+            optim_res = self.optimiser(self.model, np.zeros_like(params), **self.optimiser_args)
+            params = params + optim_res["x"]
             num_models += 1
             if np.abs(prev_min-self.E(params)) < self.tol:
                 break_reason = "tol"
@@ -29,7 +30,9 @@ class QAD():
                 break
             prev_min = self.E(params)
 
-        return {"E(x)":E(params), "x":params, "termination":break_reason, "itterations":num_models}
+        optim_res["x"] = params + optim_res["x"]
+        return optim_res
+        #return {"E(x)":E(params), "x":params, "termination":break_reason, "itterations":num_models}
 
 
     def get_model_data(self, params):

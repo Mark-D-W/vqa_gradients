@@ -63,6 +63,6 @@ class Series():
                     series[j,i] = np.sin(i/2 * x[j])
                 elif np.mod(i, 2) == 1:
                     series[j,i] = np.cos((i+1)/2 * x[j])
-        print(series)
+        #print(series)
         return(series)
 
