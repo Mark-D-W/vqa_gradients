@@ -5,34 +5,49 @@ import numdifftools as nd
 
 
 class QAD():
-    def __init__(self, tol=1e-6, num=10, optimiser=minimize, optimiser_args={}):
+    def __init__(self, tol=1e-6, num=20, optimiser=basinhopping, optimiser_args={}):
         self.tol = tol
         self.num = num
         self.optimiser = optimiser
         self.optimiser_args = optimiser_args
 
 
-    def __call__(self, E, params):
+    def __call__(self, E, par):
         self.E = E
         num_models = 0
+        params = par
         prev_min = E(params)
+        min_found = prev_min
         break_reason = ""
         while True:
             self.get_model_data(params)
+            num_models += 1
+
             optim_res = self.optimiser(self.model, np.zeros_like(params), **self.optimiser_args)
             params = params + optim_res["x"]
-            num_models += 1
-            if np.abs(prev_min-self.E(params)) < self.tol:
+            minima = self.E(params)
+            if minima < min_found:
+                min_found = minima
+                min_params = params
+                min_optim = optim_res
+
+            tol = np.abs(prev_min-self.E(params))
+            print(f"QAD: Iteration={num_models}, tolerence={tol}, min_found={min_found}")
+            if tol < self.tol:
                 break_reason = "tol"
                 break
             elif num_models > self.num:
                 break_reason = "num"
+                params, optim_res = min_params, min_optim
                 break
             prev_min = self.E(params)
 
-        optim_res["x"] = params + optim_res["x"]
+        optim_res["x"] = params
+        optim_res["fun"] = self.E(params)
+        if self.optimiser == basinhopping:
+            optim_res.success = optim_res.lowest_optimization_result.success
+        print(f"QAD: Final optimisation results: min={optim_res.fun}")
         return optim_res
-        #return {"E(x)":E(params), "x":params, "termination":break_reason, "itterations":num_models}
 
 
     def get_model_data(self, params):
