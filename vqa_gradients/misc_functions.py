@@ -4,6 +4,7 @@ import cython
 
 import numpy as np
 from scipy.misc import derivative
+from scipy.optimize import basinhopping
 
 
 
@@ -15,6 +16,12 @@ def partial_derivative(func, param, i, dx=1e-6, n=1):
 def jacobian(func, param):
     return np.array([partial_derivative(func, param, i)
                      for i in range(len(param))])
+
+
+def basinhopping_wrapper(*args, **kwargs):
+    res = basinhopping(*args, **kwargs)
+    res.success = res.lowest_optimization_result.success
+    return res
 
 
 

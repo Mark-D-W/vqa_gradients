@@ -12,7 +12,7 @@ def save_local_minima():
         infile.write(
             str(local_minima).replace("], [", "]\n[")
         )
-    
+
 
 def QAD_test():
     func = lambda x: np.sin(x[0]) + x[2]**2 + 7*x[2] - 2*np.sin(x[1])

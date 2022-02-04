@@ -20,6 +20,7 @@ class QAD():
         prev_min = E(params)
         min_found = prev_min
         min_params = params
+        min_optim = None
         break_reason = ""
         while True:
             self.get_model_data(params)
@@ -28,13 +29,17 @@ class QAD():
             optim_res = self.optimiser(self.model, np.zeros_like(params), **self.optimiser_args)
             params = params + optim_res["x"]
             minima = self.E(params)
-            if minima <= min_found:
+            if min_optim==None:
+                min_found = minima
+                min_params = params
+                min_optim = optim_res
+            elif minima <= min_found:
                 min_found = minima
                 min_params = params
                 min_optim = optim_res
 
             tol = np.abs(prev_min-self.E(params))
-            self.__log(f"Iteration={num_models}, tolerence={tol}, min_found={min_found}")
+            self.__log(f"Iteration={num_models}, tolerence={tol}, params={params}, min_found={min_found}")
             if tol < self.tol:
                 break_reason = "tol"
                 break
