@@ -4,7 +4,7 @@ import cython
 
 import numpy as np
 from scipy.misc import derivative
-from scipy.optimize import basinhopping
+from scipy.optimize import basinhopping, minimize
 
 
 
@@ -23,7 +23,15 @@ def basinhopping_wrapper(*args, **kwargs):
     res.success = res.lowest_optimization_result.success
     return res
 
+def cobyla_wrapper(*args, **kwargs):
+    return minimize(*args, **kwargs, method="COBYLA")
 
+def nelder_mead_wrapper(*args, **kwargs):
+    return minimize(*args, **kwargs, method="nelder-mead")
+
+def SLSQP_wrapper(*args, **kwargs):
+    return minimize(*args, **kwargs, method="SLSQP")
+    
 
 def complete_graph(n):
     return np.ones((n,n)) - np.diag(np.ones(n))
